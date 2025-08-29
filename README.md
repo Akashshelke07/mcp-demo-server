@@ -1,311 +1,242 @@
-# MCP Server — README
+# MCP Demo Server
 
-> **MCP Server (Model Context Protocol)** — a modular, extensible Node.js reference implementation that exposes “tools”, “resources”, and structured “prompts” so an AI assistant can perform actions, read data, and produce structured responses.
+A complete **Model Context Protocol (MCP)** demo server — modular, extensible, and ready to be used as a local development reference or a foundation for production builds.
 
----
-
-## Table of Contents
-
-1. [Project Overview](#project-overview)
-2. [Key Features](#key-features)
-3. [Prerequisites](#prerequisites)
-4. [Installation](#installation)
-5. [Running Locally](#running-locally)
-6. [API Endpoints & Examples](#api-endpoints--examples)
-7. [Folder Structure](#folder-structure)
-8. [Configuration & Environment](#configuration--environment)
-9. [Extending the Server](#extending-the-server)
-10. [Logging & Error Handling](#logging--error-handling)
-11. [Security Notes](#security-notes)
-12. [Testing](#testing)
-13. [Troubleshooting](#troubleshooting)
-14. [License](#license)
-15. [Contact / Next Steps](#contact--next-steps)
+> **Note:** This repository is a demo implementation: tools and resources include mocks and examples. When integrating with real services, replace mock implementations with real API calls and secure configuration.
 
 ---
 
-## Project Overview
+## Features
 
-This project demonstrates an MCP server that provides:
+* 🛠️ **Tools**
 
-* **Tools** (actions AI can call): Math, API (mock), Database (mock).
-* **Resources** (read-only data): System logs, User profiles.
-* **Prompts** (templates): Data analysis, Report generation, Troubleshooting.
+  * **API Tool** — fetch or mock external API data (weather, news, quotes)
+  * **Math Tool** — run arithmetic and higher-level math operations
+  * **Database Tool** — query a mock database for user data and analytics
 
-It is intended as a learning / reference implementation that is simple to run locally and easy to extend for production use.
+* 📊 **Resources**
 
----
+  * **System Logs** — structured JSON logs and error reports for debugging
+  * **User Profiles** — sample user profile data and preferences
 
-## Key Features
+* 💬 **Prompts**
 
-* Exposes tool endpoints (HTTP) that accept structured JSON and return structured results.
-* Serves resource endpoints to read logs and profiles.
-* Includes prompt templates to guide structured AI output.
-* Configurable via environment variables.
-* Centralized logging and consistent error responses.
-* Modular codebase for rapid extension.
+  * **Data Analysis** — build structured data analysis prompts
+  * **Report Generation** — create report templates and rendering helpers
+  * **System Troubleshooting** — guided troubleshooting prompts and steps
 
----
-
-## Prerequisites
-
-* Node.js v16+ (LTS recommended)
-* npm (6+ or included with Node.js)
-* Git (optional, for cloning)
+* ✅ Input validation, structured errors, JSON logging, and extensible plugin model.
 
 ---
 
-## Installation
+## Quick Start
 
-1. Clone or copy the project:
-
-   ```bash
-   git clone <repo-url> mcp-demo-server
-   cd mcp-demo-server
-   ```
-
-2. Install dependencies:
-
-   ```bash
-   npm install
-   ```
-
-3. Copy environment example:
-
-   ```bash
-   cp .env.example .env
-   ```
-
-   Edit `.env` if you want to change defaults.
-
----
-
-## Running Locally
-
-Start the server:
+### 1. Installation
 
 ```bash
-# production start
-npm start
+# Create project folder and install dependencies
+mkdir mcp-demo-server
+cd mcp-demo-server
+# Copy files from the artifact into this folder
+npm install
+```
 
-# development with auto-reload (requires nodemon)
+### 2. Configuration
+
+```bash
+# Copy env template
+cp .env.example .env
+# Edit .env for your environment and API keys
+nano .env
+```
+
+Environment variables supported (defaults in `.env.example`):
+
+* `PORT` — server port (default `3000`)
+* `LOG_LEVEL` — `info|debug|warn|error`
+* `NODE_ENV` — `development|production`
+* `WEATHER_API_KEY` — optional external API key
+* `DATABASE_PATH` — path to SQLite (or other DB) when enabled
+* `LOGS_PATH` — path to logs JSON file
+* `PROFILES_PATH` — path to profiles JSON file
+
+### 3. Run the Server
+
+```bash
+# Start server
+npm start
+# Development mode (auto-restart)
 npm run dev
 ```
 
-Default: the server listens on the `PORT` specified in `.env` (default `3000`).
+### 4. Test with Example Client
 
-Open in your browser or use curl/Postman:
-
-```
-http://localhost:3000/health
+```bash
+# Run example tests / client
+npm test
 ```
 
 ---
 
-## API Endpoints & Examples
-
-All endpoints accept and return JSON unless noted.
-
-### Health
-
-* `GET /health`
-  Response:
-
-  ```json
-  { "status": "ok", "uptime": 123.45 }
-  ```
-
-### Tools
-
-#### Math Tool
-
-* `POST /tools/math`
-  Body examples:
-
-  ```json
-  { "op": "add", "operands": [10, 20, 30] }
-  ```
-
-  Supported ops: `add`, `subtract`, `multiply`, `divide`, `pow`, `sqrt`, `factorial`, `eval` (expression).
-
-  Response:
-
-  ```json
-  { "result": 60 }
-  ```
-
-#### API Tool (mock)
-
-* `POST /tools/api`
-  Body:
-
-  ```json
-  { "type": "weather", "city": "Tokyo" }
-  ```
-
-  Supported types: `weather`, `quote`, `news`. Returns mock structured data.
-
-#### Database Tool (mock)
-
-* `POST /tools/db`
-  Body:
-
-  ```json
-  { "table": "users", "action": "select", "filter": { "city": "Tokyo" }, "limit": 10 }
-  ```
-
-  Supported tables: `users`, `orders`, `products`. Actions: `select`, `count`, `search`.
-
-### Resources
-
-#### Logs
-
-* `GET /resources/logs`
-  Query params (optional): `level=error`, `limit=50`
-  Returns array of log entries from sample data.
-
-#### Profiles
-
-* `GET /resources/profiles`
-  Query params (optional): `username=john_doe`
-  Returns profile(s) from sample data.
-
-### Prompts
-
-* `GET /prompts/:name`
-  Example: `GET /prompts/data-analysis`
-  Returns text template for the requested prompt.
-
----
-
-## Folder Structure
+## Project Structure
 
 ```
 mcp-demo-server/
 ├── src/
-│   ├── index.js                # Express app + server start
-│   ├── config/
-│   │   └── index.js            # env loader & defaults
-│   ├── tools/
-│   │   ├── mathTool.js
-│   │   ├── apiTool.js
-│   │   └── dbTool.js
-│   ├── resources/
-│   │   ├── logsResource.js
-│   │   └── profilesResource.js
-│   ├── prompts/
-│   │   └── templates.js
-│   ├── routes/
-│   │   ├── tools.js
-│   │   ├── resources.js
-│   │   ├── prompts.js
-│   │   └── health.js
-│   └── utils/
-│       ├── logger.js
-│       └── errors.js
-├── data/
-│   ├── logs.json
-│   └── profiles.json
-├── tests/
-│   └── client-example.js
-├── .env.example
-├── package.json
-└── README.md
+│   ├── server.js          # Main MCP server bootstrap and routing
+│   ├── tools/             # Tool implementations (api-tool, math-tool, db-tool)
+│   ├── resources/         # Resource implementations (logs, profiles)
+│   ├── prompts/           # Prompt templates and generators
+│   └── utils/             # Utilities (logger, config, validators)
+├── data/                  # Sample data files (mock DB, profiles, logs)
+├── tests/                 # Unit/integration test files and example clients
+├── .env.example           # Example environment variables
+├── package.json           # Node dependencies and scripts
+└── README.md              # This file
 ```
 
 ---
 
-## Configuration & Environment
+## Usage Examples
 
-Example `.env.example`:
+### Calling Tools (example client snippets)
 
+```javascript
+// Math calculations
+await client.callTool({
+  name: 'calculate_math',
+  arguments: { operation: 'add', numbers: [10, 20, 30] }
+});
+
+// API data fetching (mocked or real if configured)
+await client.callTool({
+  name: 'fetch_api_data',
+  arguments: { endpoint: 'weather', params: { city: 'Tokyo' } }
+});
+
+// Database queries
+await client.callTool({
+  name: 'query_database',
+  arguments: { query_type: 'select', table: 'users', limit: 5 }
+});
 ```
-PORT=3000
-NODE_ENV=development
-LOG_LEVEL=info
-DEFAULT_DB_LIMIT=50
+
+### Reading Resources
+
+```javascript
+const logs = await client.readResource({ uri: 'logs://system' });
+const profiles = await client.readResource({ uri: 'profiles://users' });
 ```
 
-All configuration values should be read from environment variables. Use `src/config/index.js` to centralize defaults and parsing.
+### Generating Prompts
+
+```javascript
+const prompt = await client.getPrompt({
+  name: 'analyze_data',
+  arguments: { data_source: 'logs', analysis_type: 'summary' }
+});
+```
 
 ---
 
 ## Extending the Server
 
-### Add a new tool
+### Add a New Tool
 
-1. Create a new file in `src/tools/`, e.g. `src/tools/emailTool.js`.
-2. Implement and export a `run(params)` function that returns a result object or throws errors.
-3. Register the tool in `src/tools/index.js` (a registry) so `routes/tools.js` can call it.
-4. Add tests and update README examples.
+1. Create a new file in `src/tools/` (e.g., `my-tool.js`).
+2. Export a tool object with the following shape:
 
-### Add a resource
+```javascript
+export const myTool = {
+  name: 'my_custom_tool',
+  description: 'Does something useful',
+  inputSchema: { /* JSON Schema */ },
+  async execute(args) { /* return { success: boolean, data } */ }
+};
+```
 
-1. Add static data under `data/` or implement a dynamic loader in `src/resources/`.
-2. Add a resource handler file in `src/resources/` and expose it via `src/routes/resources.js`.
+3. Import and add the tool to the tools registry in `src/server.js`.
 
-### Add prompt templates
+### Add a New Resource
 
-1. Add templates in `src/prompts/templates.js`.
-2. Expose them through `src/routes/prompts.js`.
+1. Create a new file in `src/resources/`.
+2. Export a resource object with `uri`, `name`, `description`, `mimeType`, and `read` function.
+3. Register the resource in the server resource registry.
+
+### Add a New Prompt
+
+1. Extend `src/prompts/index.js` with a new prompt object containing `name`, `description`, and a `generate` function.
+
+---
+
+## Integrations
+
+### API Integration
+
+* Obtain API keys for real services
+* Update `src/tools/api-tool.js` to make real HTTP calls
+* Add error handling, caching, and rate-limiting
+
+### Database Integration
+
+* Install drivers or ORMs (e.g., `sqlite3`, `pg`, `mysql2`)
+* Update `src/tools/database-tool.js` to use real connection pooling and queries
+* Sanitize inputs and use parameterized statements
 
 ---
 
 ## Logging & Error Handling
 
-* Use `src/utils/logger.js` for consistent logs (method, path, status, timestamps).
-* Errors should be normalized to a JSON shape:
-
-  ```json
-  { "error": "BadRequest", "message": "Detailed message" }
-  ```
-* Control verbosity with `LOG_LEVEL`.
+* All tool executions and resource access are logged in structured JSON.
+* Errors include context and stack traces (respecting `NODE_ENV`).
+* The server is designed to continue running when individual tools fail — errors are surfaced to clients in a standardized format.
 
 ---
 
-## Security Notes
+## Security Considerations
 
-* This reference implementation is designed for local development and learning.
-* **Do not** expose it to the public internet without:
-
-  * Authentication & authorization
-  * Input validation & sanitization for all external inputs
-  * Rate limiting
-  * Proper CORS configuration
-  * Secure storage for any real secrets (do not put secrets in `.env` in shared repos)
+* Validate and sanitize all inputs to tools/resources.
+* Store secrets in environment variables or a secrets manager — do not commit keys.
+* Add authentication and authorization when exposing the server publicly.
+* Implement rate-limiting on tool endpoints that call external APIs.
 
 ---
 
 ## Testing
 
-* Example client: `node tests/client-example.js` demonstrates:
-
-  * calling math tool
-  * calling api tool
-  * reading logs and profiles
-* Use Postman or curl for manual testing.
+* Unit tests live in `tests/` and can be run with `npm test`.
+* Include tests for input validation, tool execution, and resource reads.
 
 ---
 
-## Troubleshooting
+## Contributing
 
-* **Port already in use** (`EADDRINUSE`): change `PORT` in `.env`.
-* **Module not found**: ensure `npm install` completed successfully.
-* **Invalid JSON**: set `Content-Type: application/json` in requests.
+1. Fork the repository
+2. Create a feature branch
+3. Add tests and documentation
+4. Open a pull request with a clear description of changes
+
+Please follow semantic commit messages and keep PRs focused.
 
 ---
 
 ## License
 
-MIT — free to use, modify, and adapt for learning and prototyping. If you publish derived work publicly, attribution is appreciated.
+MIT License — see `LICENSE` for details.
 
 ---
 
-## Contact / Next Steps
+## Support
 
-If you want:
+If you encounter issues:
 
-* The **complete code for every file** ready to copy-paste, I can generate the full codebase next.
-* A **single-file quick-start** (one `server.js`) for immediate testing, I can provide that too.
+* Check the logs (path configured by `LOGS_PATH`).
+* Verify `.env` configuration and API keys.
+* Run example client in `tests/` to reproduce issues.
+* Review MCP specification for expected behaviors.
 
-Choose which one you prefer and I’ll provide it.
+For feature requests or help, open an issue or submit a PR.
+
+---
+
+*This README was generated as the single requested README file for the MCP Demo Server. No other files were changed.*

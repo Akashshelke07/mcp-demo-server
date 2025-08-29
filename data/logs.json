@@ -1,0 +1,65 @@
+{
+  "logs": [
+    {
+      "id": 1,
+      "timestamp": "2024-01-20T10:00:00Z",
+      "level": "info",
+      "service": "api",
+      "message": "Server started successfully",
+      "metadata": {
+        "port": 3000,
+        "environment": "production"
+      }
+    },
+    {
+      "id": 2,
+      "timestamp": "2024-01-20T10:15:00Z",
+      "level": "warn",
+      "service": "database",
+      "message": "Connection pool running low",
+      "metadata": {
+        "available": 2,
+        "total": 10,
+        "threshold": 3
+      }
+    },
+    {
+      "id": 3,
+      "timestamp": "2024-01-20T10:30:00Z",
+      "level": "error",
+      "service": "auth",
+      "message": "Failed login attempt",
+      "metadata": {
+        "ip": "192.168.1.100",
+        "username": "admin",
+        "attempts": 3
+      }
+    },
+    {
+      "id": 4,
+      "timestamp": "2024-01-20T11:00:00Z",
+      "level": "info",
+      "service": "cache",
+      "message": "Cache cleared successfully",
+      "metadata": {
+        "keys_removed": 1500,
+        "memory_freed": "256MB"
+      }
+    }
+  ],
+  "summary": {
+    "total": 4,
+    "levels": {
+      "info": 2,
+      "warn": 1,
+      "error": 1
+    },
+    "services": {
+      "api": 1,
+      "database": 1,
+      "auth": 1,
+      "cache": 1
+    }
+  },
+  "lastUpdated": "2024-01-20T11:00:00Z"
+}

@@ -1,0 +1,27 @@
+{
+  "name": "mcp-demo-server",
+  "version": "1.0.0",
+  "description": "A complete Model Context Protocol (MCP) server implementation",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node tests/client-example.js"
+  },
+  "keywords": ["mcp", "model-context-protocol", "ai", "tools", "resources"],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.4.0",
+    "dotenv": "^16.3.1",
+    "node-fetch": "^3.3.2",
+    "sqlite3": "^5.1.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

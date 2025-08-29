@@ -1,0 +1,74 @@
+{
+  "profiles": [
+    {
+      "id": 1,
+      "username": "john_doe",
+      "email": "john@example.com",
+      "fullName": "John Doe",
+      "role": "admin",
+      "preferences": {
+        "theme": "dark",
+        "notifications": true,
+        "language": "en",
+        "timezone": "UTC"
+      },
+      "stats": {
+        "loginCount": 45,
+        "lastLogin": "2024-01-20T09:30:00Z",
+        "accountCreated": "2024-01-01T00:00:00Z",
+        "totalSessions": 89
+      },
+      "permissions": ["read", "write", "admin"]
+    },
+    {
+      "id": 2,
+      "username": "jane_smith",
+      "email": "jane@example.com",
+      "fullName": "Jane Smith",
+      "role": "user",
+      "preferences": {
+        "theme": "light",
+        "notifications": false,
+        "language": "en",
+        "timezone": "America/New_York"
+      },
+      "stats": {
+        "loginCount": 23,
+        "lastLogin": "2024-01-19T14:22:00Z",
+        "accountCreated": "2024-01-15T00:00:00Z",
+        "totalSessions": 31
+      },
+      "permissions": ["read", "write"]
+    },
+    {
+      "id": 3,
+      "username": "bob_wilson",
+      "email": "bob@example.com",
+      "fullName": "Bob Wilson",
+      "role": "moderator",
+      "preferences": {
+        "theme": "auto",
+        "notifications": true,
+        "language": "es",
+        "timezone": "Europe/Madrid"
+      },
+      "stats": {
+        "loginCount": 67,
+        "lastLogin": "2024-01-20T08:45:00Z",
+        "accountCreated": "2023-12-10T00:00:00Z",
+        "totalSessions": 124
+      },
+      "permissions": ["read", "write", "moderate"]
+    }
+  ],
+  "metadata": {
+    "totalUsers": 3,
+    "activeUsers": 3,
+    "roles": {
+      "admin": 1,
+      "moderator": 1,
+      "user": 1
+    },
+    "lastUpdated": "2024-01-20T10:00:00Z"
+  }
+}
